@@ -6,7 +6,6 @@ import { useNavigate } from "react-router";
 const Playlist: React.FC<{playlist: Items}> = ({playlist}) => {
     const navigate = useNavigate();
     const handlePlaylistClick = () => {
-        console.log('clicked', playlist.tracks.href);
         navigate(`/playlist/${playlist.id}`);
     }
 
@@ -38,7 +37,7 @@ const Playlists = () => {
     return (
         <>
             <div className="flex flex-row flex-wrap gap-4 p-2 shadow-2xl">
-                {playlists && playlists.items.length > 0 && playlists.items.map((playlist) => {
+                {playlists && playlists.items && playlists.items.length > 0 && playlists.items.map((playlist) => {
                     return(
                         <Playlist key={playlist.id} playlist={playlist} />
                     );

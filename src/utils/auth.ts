@@ -21,25 +21,33 @@ const generateCodeChallenge = async (codeVerifier: string) => {
 }
 
 export const refreshAccessToken = async (refreshToken: string) => {
-    const response = await fetch('https://accounts.spotify.com/api/token', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({
-                    client_id: CLIENT_ID,
-                    grant_type: 'refresh_token',
-                    refresh_token: refreshToken
-                }),
-            });
-    const data = await response.json();
+    try {
+        const response = await fetch('https://accounts.spotify.com/api/token', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        client_id: CLIENT_ID,
+                        grant_type: 'refresh_token',
+                        refresh_token: refreshToken
+                    }),
+                });
+        const data = await response.json();
 
-    const newTokens = {
-        accessToken: data.access_token,
-        refreshToken: data.refresh_token || refreshToken,
-        expiresIn: Date.now() + data.expires_in * 1000,
-    };
-
-    localStorage.setItem("spotifyAuth", JSON.stringify(newTokens));
-    return newTokens;
+        if (data.error) {
+            throw new Error(data.error_description);
+        }
+    
+        const newTokens = {
+            accessToken: data.access_token,
+            refreshToken: data.refresh_token || refreshToken,
+            expiresIn: Date.now() + data.expires_in * 1000,
+        };
+    
+        localStorage.setItem("spotifyAuth", JSON.stringify(newTokens));
+        return newTokens;
+    } catch (e) {
+        console.error(e);
+    }
 };
 
 export const logout = () => {
@@ -90,6 +98,10 @@ export const getAccessToken = async (code: string) => {
                         }),
                     });
         const data = await response.json();
+
+        if (data.error) {
+            throw new Error(data.error_description);
+        }
 
         const tokens = {
             accessToken: data.access_token,
