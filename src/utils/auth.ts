@@ -63,7 +63,7 @@ export const redirectToAuth = async () => {
         client_id: import.meta.env.VITE_SPOTIFY_CLIENT_ID,
         response_type: "code",
         redirect_uri : import.meta.env.VITE_SPOTIFY_REDIRECT_URI,
-        scope: "user-read-private user-read-email",
+        scope: "user-read-private user-read-email playlist-read-private",
         code_challenge_method: "S256",
         code_challenge: challenge
     });

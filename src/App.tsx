@@ -8,9 +8,9 @@ function App() {
   return (
     <>
         <UserProfileProvider>
-          <div className="px-20">
+          <div className="md:px-20">
             <Navbar />
-            <div className='grid'>
+            <div className='main'>
               <RouterProvider router={router} />
             </div>
           </div>

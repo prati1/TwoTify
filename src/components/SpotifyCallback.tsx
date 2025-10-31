@@ -34,8 +34,7 @@ const SpotifyCallback = () => {
 
         const handleCallback = async () => {
             if (!code) {
-                localStorage.removeItem("accessToken");
-                localStorage.removeItem("refreshToken");
+                localStorage.removeItem("spotifyAuth");
                 redirectToAuth();
                 return;
             }

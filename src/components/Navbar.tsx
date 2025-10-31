@@ -17,14 +17,19 @@ const Navbar = () => {
         <>
         <div className="navbar">
             <div className="flex flex-row">
-                <h2>TwoTify</h2>
+                <a href="/"><h2>TwoTify</h2></a>               
+            </div>
+            <div className="flex flex-row justify-center items-center gap-2">
+                <a href="/playlists" className="text-black hover:text-white hover:bg-blue-200 p-2 rounded-2xl cursor-pointer">
+                    <h3>Playlists</h3>
+                </a>
             </div>
             {isAuthenticated
             ? <div className="relative">
                 <button onClick={userDropdownToggle} className="cursor-pointer">
-                    <div className="flex flex-row flex-wrap justify-center items-center gap-1">
-                        {userProfile?.images && userProfile.images.length > 0 && <img className="h-10 w-10 rounded-full overflow-hidden border-2 object-cover border-gray-100 focus:outline-none focus:border-white" src={userProfile?.images[0].url} />}
-                        <span>{userProfile?.display_name}</span>
+                    <div className="flex flex-row justify-center items-center gap-1 w-[160px]">
+                        {userProfile?.images && userProfile.images.length > 0 && <img className="h-10 w-10 shrink-0 grid-rows-2 rounded-full overflow-hidden border-2 object-cover border-gray-100 focus:outline-none focus:border-white" src={userProfile?.images[0].url} />}
+                        <span className="overflow-hidden">{userProfile?.display_name}</span>
 
                     </div>
                 </button>
@@ -32,13 +37,12 @@ const Navbar = () => {
                 <button className="fixed inset-0 bg-gray-600 h-full w-full opacity-25" tabIndex={-1} onClick={()=>setuserDropdownIsOpen(false)}></button>}
                 
                 {userDropdownIsOpen && <div className="absolute right-0 bg-white rounded-lg py-2 w-48 shadow-md">
-                    <a href="#" className="block p-2 text-gray-800 hover:bg-indigo-500 hover:text-white">Profile</a>
+                    <a href="/profile" className="block p-2 text-gray-800 hover:bg-indigo-500 hover:text-white">Profile</a>
                     <a href="#" className="block p-2 text-gray-800 hover:bg-indigo-500 hover:text-white" onClick={logoutUser}>Logout</a>
                 </div>}
             </div>
             : <div className="flex flex-row gap-2"> 
-                <button onClick={handleLogin} className="bg-blue-600 hover:bg-blue-900 text-white rounded-2xl p-2">
-                    
+                <button onClick={handleLogin} className="bg-blue-600 hover:bg-blue-900 text-white rounded-2xl p-2 cursor-pointer">          
                     <h4>Login Using Spotify</h4>
                 </button>
             </div>}

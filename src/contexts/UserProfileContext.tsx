@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
-import { getStoredAuth, logout, refreshAccessToken } from "../utils/auth";
-import axios from "axios";
+import { getStoredAuth, logout } from "../utils/auth";
+import { api, registerAuthErrorHandler } from "../utils/api";
+import type { UserProfile } from "../types/users";
 
 interface UserProfileContextType {
     userProfile: UserProfile | null;
@@ -35,34 +36,20 @@ export const UserProfileProvider = ({
             return;
         }
 
-        const { accessToken, refreshToken, expiresIn } = storedAuth;
-
-        // Refresh token if expired
-        if (Date.now() > expiresIn && refreshToken) {
-            try {
-                const newTokens = await refreshAccessToken(refreshToken);
-                storedAuth.accessToken = newTokens.accessToken;
-            } catch (err) {
-                console.error("Token refresh failed:", err);
-                logout();
-                return;
-            }
-        }
-
         try {
-            const { data: user }: {data: UserProfile} = await axios.get(
-                "https://api.spotify.com/v1/me",
-                {
-                headers: { Authorization: `Bearer ${storedAuth.accessToken}` },
-                }
-        );
+            const response = await api(
+                "https://api.spotify.com/v1/me"
+            );
+            const user: UserProfile = await response.json();
+            console.log('user', user);
 
-        setUserProfile(user);
-        localStorage.setItem("spotifyUser", JSON.stringify(user));
-        setIsAuthenticated(true);
+            setUserProfile(user);
+            localStorage.setItem("spotifyUser", JSON.stringify(user));
+            setIsAuthenticated(true);
 
         } catch (error) {
             console.error("Failed to fetch user profile:", error);
+            setUserProfile(null);
             setIsAuthenticated(false);
             logout();
         }
@@ -75,6 +62,15 @@ export const UserProfileProvider = ({
     } else {
         loadUser();
     }
+    }, []);
+
+    useEffect(() => {
+        registerAuthErrorHandler(() => {
+            console.warn("Auth expired or invalid — logging out.");
+            setUserProfile(null);
+            setIsAuthenticated(false);
+            logout();
+        });
     }, []);
 
     const logoutUser = () => {

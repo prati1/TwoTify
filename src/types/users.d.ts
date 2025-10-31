@@ -1,4 +1,4 @@
-interface UserProfile {
+export interface UserProfile {
     country: string,
     display_name: string,
     email: string,
@@ -10,7 +10,7 @@ interface UserProfile {
     uri: string
 }
 
-type Image = {
+export type Image = {
     url: string,
     height: number,
     width: number,
