@@ -1,5 +1,5 @@
-const CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
-const REDIRECT_URI = import.meta.env.VITE_SPOTIFY_REDIRECT_URI;
+const CLIENT_ID = import.meta.env.VITE_PUBLIC_SPOTIFY_CLIENT_ID;
+const REDIRECT_URI = import.meta.env.VITE_PUBLIC_SPOTIFY_REDIRECT_URI;
 
 const generateCodeVerifier = (length: number) => {
     let text = '';
@@ -68,9 +68,9 @@ export const redirectToAuth = async () => {
     localStorage.setItem("spotify_code_verifier", verifier);
 
     const params = new URLSearchParams({
-        client_id: import.meta.env.VITE_SPOTIFY_CLIENT_ID,
+        client_id: CLIENT_ID,
         response_type: "code",
-        redirect_uri : import.meta.env.VITE_SPOTIFY_REDIRECT_URI,
+        redirect_uri : REDIRECT_URI,
         scope: "user-read-private user-read-email playlist-read-private user-modify-playback-state streaming",
         code_challenge_method: "S256",
         code_challenge: challenge
