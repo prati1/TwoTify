@@ -8,10 +8,11 @@ interface WebPlaybackProps {
     playlistUri: string,
     trackIndex: number,
     totalTracks: number,
+    playlistName: string
 }
 
 // @ToDo: Work with episodes EpisodeObject
-const WebPlayback: React.FC<WebPlaybackProps> = ({playlistUri, trackIndex, totalTracks}) => {
+const WebPlayback: React.FC<WebPlaybackProps> = ({playlistUri, trackIndex, totalTracks, playlistName}) => {
     const [deviceId, setDeviceId] = useState();
     const [isPaused, setPaused] = useState(false);
     const [isActive, setActive] = useState(false);
@@ -84,24 +85,27 @@ const WebPlayback: React.FC<WebPlaybackProps> = ({playlistUri, trackIndex, total
 
     return(
         <>
-            <h3 className="text-center text-white opacity-90">Playlist name</h3>
+            <h3 className="text-center text-white opacity-90">{playlistName}</h3>
             <div className="flex flex-1 flex-col min-h-0">
                 <img src={currentTrack?.album.images[0]?.url} className="max-h-full w-auto object-contain" />
             </div>
-            <h2 className="text-white px-25">{currentTrack?.name}</h2>
-            <h3 className="text-white opacity-60 px-25">{currentTrack?.artists && currentTrack.artists.length > 0 && currentTrack.artists.map((artist) => artist.name).join(', ') }</h3>
-            <div className="flex flex-row px-25 justify-around pb-5">
-                <button className="cursor-pointer" onClick={() => { return spotifyPlayer ? spotifyPlayer.previousTrack() : null }}>
-                    <ChevronFirst className="w-10 h-10 text-white"/>
-                </button>
-                <button className="cursor-pointer" onClick={() => { return spotifyPlayer ? spotifyPlayer.togglePlay() : null }}>
-                    {isPaused ? <CirclePlay className="w-15 h-15 text-white" /> : <CirclePause className="w-15 h-15 text-white" />}
-                </button>
-                <button className="cursor-pointer" onClick={() => { return spotifyPlayer ? spotifyPlayer.nextTrack() : null }} >
-                    <ChevronLast className="w-10 h-10 text-white" />
-                </button>
+            <h2 className="text-white md:px-10 xl:px-25">{currentTrack?.name}</h2>
+            <h3 className="text-white opacity-60 md:px-10 xl:px-25">{currentTrack?.artists && currentTrack.artists.length > 0 && currentTrack.artists.map((artist) => artist.name).join(', ') }</h3>
+            {spotifyPlayer && 
+                <div className="flex flex-row px-25 justify-around pb-5">
+                    <button className="cursor-pointer" onClick={() => { return spotifyPlayer ? spotifyPlayer.previousTrack() : null }}>
+                        <ChevronFirst className="w-10 h-10 text-white"/>
+                    </button>
+                    <button className="cursor-pointer" onClick={() => { return spotifyPlayer ? spotifyPlayer.togglePlay() : null }}>
+                        {isPaused ? <CirclePlay className="w-15 h-15 text-white" /> : <CirclePause className="w-15 h-15 text-white" />}
+                    </button>
+                    <button className="cursor-pointer" onClick={() => { return spotifyPlayer ? spotifyPlayer.nextTrack() : null }} >
+                        <ChevronLast className="w-10 h-10 text-white" />
+                    </button>
 
-            </div>
+                </div>
+            }
+            
         </>
     )
 

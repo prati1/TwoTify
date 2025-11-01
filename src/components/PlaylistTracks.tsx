@@ -53,6 +53,7 @@ const PlaylistTracks = () => {
     const { id } = useParams();
     const [tracks, setTracks] = useState<PlaylistTracks>();
     const [uri, setUri] = useState<string>("");
+    const [playlistName, setPlaylistName] = useState<string>("");
     const [selectedIndex, setSelectedIndex] = useState(0);
 
     useEffect(() => {
@@ -60,8 +61,7 @@ const PlaylistTracks = () => {
             const playlistResp = await api(`https://api.spotify.com/v1/playlists/${id}`);
             const playlistData = await playlistResp.json();
             setUri(playlistData.uri);
-
-
+            setPlaylistName(playlistData.name);
 
             const resp = await api(`https://api.spotify.com/v1/playlists/${id}/tracks`);
             const data: PlaylistTracks = await resp.json();
@@ -96,6 +96,7 @@ const PlaylistTracks = () => {
                             totalTracks={tracks?.items.length} 
                             playlistUri={uri} 
                             trackIndex={selectedIndex}
+                            playlistName={playlistName}
                             />}                     
                     </div>
                 </div>
