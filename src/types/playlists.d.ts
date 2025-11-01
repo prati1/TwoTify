@@ -1,30 +1,4 @@
 import type { Image } from "./users"
-
-declare global {
-    namespace Spotify {
-        interface PlayerInit {
-        name: string;
-        getOAuthToken: (cb: (token: string) => void) => void;
-        volume?: number;
-        }
-
-        interface Player {
-        connect(): Promise<boolean>;
-        disconnect(): void;
-        addListener(event: string, cb: (...args: any[]) => void): boolean;
-        removeListener(event: string, cb?: (...args: any[]) => void): boolean;
-        getCurrentState(): Promise<any>;
-        previousTrack(): Promise<void>;
-        nextTrack(): Promise<void>;
-        togglePlay(): Promise<void>;
-        }
-    }
-    interface Window {
-        Spotify: typeof Spotify,
-        onSpotifyWebPlaybackSDKReady: () => void
-    }
-}
-
 export interface Playlists {
     href: string,
     limit: number,

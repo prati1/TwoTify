@@ -1,23 +1,22 @@
-import { useEffect, useRef, useState } from "react";
-import type { TrackObject } from "../types/playlists";
+import { useEffect, useState } from "react";
 import { getStoredAuth } from "../utils/auth";
 import { api } from "../utils/api";
-import { CirclePause, CirclePlay, ChevronFirst, ChevronLast, Circle } from "lucide-react";
+import { CirclePause, CirclePlay, ChevronFirst, ChevronLast } from "lucide-react";
 
 interface WebPlaybackProps {
     playlistUri: string,
     trackIndex: number,
-    totalTracks: number,
     playlistName: string
 }
 
 // @ToDo: Work with episodes EpisodeObject
-const WebPlayback: React.FC<WebPlaybackProps> = ({playlistUri, trackIndex, totalTracks, playlistName}) => {
-    const [deviceId, setDeviceId] = useState();
+const WebPlayback: React.FC<WebPlaybackProps> = ({playlistUri, trackIndex, playlistName}) => {
+    const [deviceId, setDeviceId] = useState<string>();
     const [isPaused, setPaused] = useState(false);
     const [isActive, setActive] = useState(false);
-    const [currentTrack, setCurrentTrack] = useState<TrackObject>();
+    const [currentTrack, setCurrentTrack] = useState<Spotify.Track>();
     const [spotifyPlayer, setSpotifyPlayer] = useState<Spotify.Player | null>(null);
+    console.log(isActive);
 
     useEffect(() => {
         const updateCurrentPlayedSong = async () => {

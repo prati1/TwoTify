@@ -1,4 +1,4 @@
-import { getStoredAuth, refreshAccessToken, logout } from "./auth";
+import { getStoredAuth, refreshAccessToken } from "./auth";
 
 let onAuthError: (() => void) | null = null;
 
@@ -15,13 +15,19 @@ export const api = async(input: RequestInfo, init?: RequestInit):  Promise<Respo
         throw new Error("Not Authenticated");
     }
 
-    let {accessToken, refreshToken, expiresIn } = storedAuth;
+    let {accessToken } = storedAuth;
+    const {refreshToken, expiresIn} = storedAuth;
 
     // Refresh token if expired
     if (Date.now() > expiresIn && refreshToken) {
         try {
             const newTokens = await refreshAccessToken(refreshToken);
-            accessToken = newTokens.accessToken;
+            if (newTokens) {
+                accessToken = newTokens.accessToken;
+            } else {
+                onAuthError?.();
+                throw new Error("No new token received with refresh token");
+            }
 
         } catch (err) {
             console.error("Token refresh failed:", err);

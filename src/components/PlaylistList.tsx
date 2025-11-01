@@ -17,7 +17,7 @@ const Playlist: React.FC<{playlist: Items}> = ({playlist}) => {
     </>)
 }
 
-const Playlists = () => {
+const PlaylistList = () => {
     const [playlists, setPlaylists] = useState<Playlists>();
 
     useEffect(() => {
@@ -48,4 +48,4 @@ const Playlists = () => {
     )
 }
 
-export default Playlists;
+export default PlaylistList;

@@ -6,7 +6,7 @@ import WebPlayback from "./WebPlayback";
 
 const Track: React.FC<{track: TrackObject}> = ({track}) => {
     const playSong = async () => {
-        const play = await api("https://api.spotify.com/v1/me/player/play", {
+        await api("https://api.spotify.com/v1/me/player/play", {
             method: "PUT",
             body: JSON.stringify({
                 uri: track.uri,
@@ -31,24 +31,30 @@ const Track: React.FC<{track: TrackObject}> = ({track}) => {
 
 const Episode: React.FC<{episode: EpisodeObject}> = ({episode}) => {
     return(
-        <></>
+        <>{episode.description}</>
     )
 
 }
 
 const PlaylistItem: React.FC<{song: Track}> = ({song}) => {
+    // Type guard for track
+    const isTrack = (track: TrackObject | EpisodeObject): track is TrackObject => {
+        return track.type == 'track';
+    };
+
+    const track = song.track;
     return (
         <>
             <div className="bg-gray-700 hover:bg-gray-900 cursor-pointer">
-                {song.track.type == 'track' && <Track track={song.track} />}
-                {song.track.type == 'episode' && <Episode episode={song.track} />}
+                {isTrack(track) && <Track track={track} />}
+                {!isTrack(track) && <Episode episode={track} />}
 
             </div>
         </>
     )
 }
 
-const PlaylistTracks = () => {
+const PlaylistDetail = () => {
     const { id } = useParams();
     const [tracks, setTracks] = useState<PlaylistTracks>();
     const [uri, setUri] = useState<string>("");
@@ -92,7 +98,6 @@ const PlaylistTracks = () => {
                     <h2 className="text-center">Playing from playlist</h2>
                     <div className="flex flex-col flex-grow bg-gray-700 gap-2 px-5 py-2 overflow-hidden">
                         {tracks && <WebPlayback 
-                            totalTracks={tracks?.items.length} 
                             playlistUri={uri} 
                             trackIndex={selectedIndex}
                             playlistName={playlistName}
@@ -106,4 +111,4 @@ const PlaylistTracks = () => {
     )
 }
 
-export default PlaylistTracks;
+export default PlaylistDetail;
