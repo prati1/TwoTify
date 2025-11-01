@@ -2,7 +2,8 @@ import { useContext, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import {redirectToAuth, getAccessToken} from "../utils/auth";
 import UserProfileContext from "../contexts/UserProfileContext";
-import axios from "axios";
+import { api } from "../utils/api";
+import type { UserProfile } from "../types/users";
 
 const SpotifyCallback = () => {
     const navigate = useNavigate();
@@ -16,15 +17,12 @@ const SpotifyCallback = () => {
         if (didExecute.current) return;
         didExecute.current = true;
 
-        const getProfileData = async (accessToken: string) => {
+        const getProfileData = async () => {
             try {
-                const userProfileData = await axios.get('https://api.spotify.com/v1/me', {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-                });
-                setUserProfile({...userProfileData.data});
-                localStorage.setItem("spotifyUser", JSON.stringify(userProfileData.data));
+                const userProfileData = await api('https://api.spotify.com/v1/me');
+                const userProfile: UserProfile = await userProfileData.json();
+                setUserProfile({...userProfile});
+                localStorage.setItem("spotifyUser", JSON.stringify(userProfile));
                 setIsAuthenticated(true);
                 
             } catch (e) {
@@ -40,8 +38,8 @@ const SpotifyCallback = () => {
             }
 
             if (code) {
-                const tokens = await getAccessToken(code);
-                await getProfileData(tokens?.accessToken);
+                await getAccessToken(code);
+                await getProfileData();
                 navigate('/');
             }
         }

@@ -13,7 +13,6 @@ const Track: React.FC<{track: TrackObject}> = ({track}) => {
                 position_ms: 0
             })
         });
-        console.log('play', play);
     }
     return (
         <>
