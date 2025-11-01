@@ -16,13 +16,13 @@ const Navbar = () => {
     return(
         <>
         <div className="navbar">
-            <div className="flex flex-row">
-                <a href="/"><h2>TwoTify</h2></a>               
-            </div>
-            <div className="flex flex-row justify-center items-center gap-2">
-                <a href="/playlists" className="text-black hover:text-white hover:bg-blue-200 p-2 rounded-2xl cursor-pointer">
-                    <h3>Playlists</h3>
-                </a>
+            <a href="/"><h2>TwoTify</h2></a>
+            <div className="flex flex-row gap-2 h-full">
+                <button className="cursor-pointer px-2 py-2 text-black hover:text-white hover:bg-gray-500 text-center">
+                    <a href="/playlists">
+                        <h3>Playlists</h3>
+                    </a>
+                </button>
             </div>
             {isAuthenticated
             ? <div className="relative">

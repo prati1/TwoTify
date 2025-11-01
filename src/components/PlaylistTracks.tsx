@@ -76,7 +76,7 @@ const PlaylistTracks = () => {
         <>
         <div className="shadow-2xl p-2 bg-gray-100">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-start">
-                <div className="col-span-1 bg-blue-100 min-h-screen max-h-screen overflow-y-auto">
+                <div className="col-span-1 bg-gray-100 min-h-screen max-h-screen overflow-y-auto">
                     <h2 className="text-center">Tracks</h2>
                     <div className="flex flex-col gap-2">
                         {tracks && tracks.total > 0 && tracks.items.map((track, index) => {
@@ -89,9 +89,9 @@ const PlaylistTracks = () => {
                     </div>
                     
                 </div>
-                <div className="col-span-1 md:col-span-2 bg-blue-50 min-h-screen max-h-screen flex flex-col">
+                <div className="col-span-1 md:col-span-2 bg-gray-100 h-screen flex flex-col">
                     <h2 className="text-center">Playing from playlist</h2>
-                    <div className="flex-grow bg-gray-700">
+                    <div className="flex flex-col flex-grow bg-gray-700 gap-2 px-5 py-2 overflow-hidden">
                         {tracks && <WebPlayback 
                             totalTracks={tracks?.items.length} 
                             playlistUri={uri} 

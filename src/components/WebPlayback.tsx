@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { TrackObject } from "../types/playlists";
 import { getStoredAuth } from "../utils/auth";
 import { api } from "../utils/api";
+import { CirclePause, CirclePlay, ChevronFirst, ChevronLast, Circle } from "lucide-react";
 
 interface WebPlaybackProps {
     playlistUri: string,
@@ -15,7 +16,7 @@ const WebPlayback: React.FC<WebPlaybackProps> = ({playlistUri, trackIndex, total
     const [isPaused, setPaused] = useState(false);
     const [isActive, setActive] = useState(false);
     const [currentTrack, setCurrentTrack] = useState<TrackObject>();
-    const playerRef = useRef<Spotify.Player | null>(null);
+    const [spotifyPlayer, setSpotifyPlayer] = useState<Spotify.Player | null>(null);
 
     useEffect(() => {
         const updateCurrentPlayedSong = async () => {
@@ -29,10 +30,10 @@ const WebPlayback: React.FC<WebPlaybackProps> = ({playlistUri, trackIndex, total
             })
         }
 
-        if (deviceId && playerRef.current) {
+        if (deviceId && spotifyPlayer) {
             updateCurrentPlayedSong();
         }
-    }, [deviceId, playlistUri, trackIndex, playerRef]);
+    }, [deviceId, playlistUri, trackIndex, spotifyPlayer]);
 
     useEffect(() => {
         const script = document.createElement("script");
@@ -61,8 +62,8 @@ const WebPlayback: React.FC<WebPlaybackProps> = ({playlistUri, trackIndex, total
                 console.log('Device ID has gone offline', device_id);
             });
             
+            setSpotifyPlayer(player);
             await player.connect();
-            playerRef.current = player;
 
             player.addListener('player_state_changed', ( state => {
                 if (!state) {
@@ -83,29 +84,24 @@ const WebPlayback: React.FC<WebPlaybackProps> = ({playlistUri, trackIndex, total
 
     return(
         <>
-        <div className="container">
-            <div className="main-wrapper">
-                <img src={currentTrack?.album.images[0].url} />
-
-                <div>
-                    <div>{ currentTrack?.name }</div>
-
-                    <div>{ currentTrack?.artists[0].name }</div>
-                </div>
-
-                <button className="btn-spotify" onClick={() => { return playerRef.current ? playerRef.current.previousTrack() : null }} >
-                    &lt;&lt;
-                </button>
-
-                <button className="btn-spotify" onClick={() => { return playerRef.current ? playerRef.current.togglePlay() : null }} >
-                    { isPaused ? "PLAY" : "PAUSE" }
-                </button>
-
-                <button className="btn-spotify" onClick={() => { return playerRef.current ? playerRef.current.nextTrack() : null }} >
-                    &gt;&gt;
-                </button>
+            <h3 className="text-center text-white opacity-90">Playlist name</h3>
+            <div className="flex flex-1 flex-col min-h-0">
+                <img src={currentTrack?.album.images[0]?.url} className="max-h-full w-auto object-contain" />
             </div>
-        </div>
+            <h2 className="text-white px-25">{currentTrack?.name}</h2>
+            <h3 className="text-white opacity-60 px-25">{currentTrack?.artists && currentTrack.artists.length > 0 && currentTrack.artists.map((artist) => artist.name).join(', ') }</h3>
+            <div className="flex flex-row px-25 justify-around pb-5">
+                <button className="cursor-pointer" onClick={() => { return spotifyPlayer ? spotifyPlayer.previousTrack() : null }}>
+                    <ChevronFirst className="w-10 h-10 text-white"/>
+                </button>
+                <button className="cursor-pointer" onClick={() => { return spotifyPlayer ? spotifyPlayer.togglePlay() : null }}>
+                    {isPaused ? <CirclePlay className="w-15 h-15 text-white" /> : <CirclePause className="w-15 h-15 text-white" />}
+                </button>
+                <button className="cursor-pointer" onClick={() => { return spotifyPlayer ? spotifyPlayer.nextTrack() : null }} >
+                    <ChevronLast className="w-10 h-10 text-white" />
+                </button>
+
+            </div>
         </>
     )
 
